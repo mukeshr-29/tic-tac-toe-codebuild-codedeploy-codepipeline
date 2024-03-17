@@ -1,0 +1,31 @@
+version: 0.2
+
+env:
+  parameter-store:
+      DOCKER_REGISTRY_USERNAME : "/docker-credentials/username"
+      DOCKER_REGISTRY_PASSWORD : "/docker-credentials/password"
+      DOCKER_REGISTRY_URL : "/docker-registry/url"
+        
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+      java: corretto17
+  pre_build:
+    commands:
+      - sudo apt update
+      - sudo apt install -y npm
+  build:
+    commands:
+      - echo "build docker image"
+      - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
+      - docker build -t "$DOCKER_REGISTRY_USERNAME/tic-tac-aws-cicd ."
+      - docker push "$DOCKER_REGISTRY_USERNAME/tic-tac-aws-cicd"
+  post_build:
+    commands:
+      - echo "build is success"
+      - command
+artifacts:
+  files:
+    - '**/*'
+  base-directory: .
