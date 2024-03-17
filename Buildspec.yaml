@@ -19,7 +19,7 @@ phases:
     commands:
       - echo "build docker image"
       - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
-      - docker build -t "$DOCKER_REGISTRY_USERNAME/tic-tac-aws-cicd ."
+      - docker build -t "$DOCKER_REGISTRY_USERNAME/tic-tac-aws-cicd" .
       - docker push "$DOCKER_REGISTRY_USERNAME/tic-tac-aws-cicd"
   post_build:
     commands:
